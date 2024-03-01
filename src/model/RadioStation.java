@@ -1,4 +1,13 @@
-import DataBase.DBHandler;
+package model;
+
+import broadcast.Broadcasting;
+import broadcast.broadcasters.Broadcaster;
+import broadcast.broadcasters.WorkingBroadcaster;
+import broadcast.sections.Advertising;
+import broadcast.sections.Interview;
+import broadcast.sections.Song;
+import broadcast.sections.abstraction.BroadcastSection;
+import data_base.DBHandler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,9 +52,9 @@ public class RadioStation {
                             System.out.println("1 - показати детальну інформацію\n2 - показати прибуток\n" +
                                     "3 - повернутись на попередній крок");
                             int choice = scanner.nextInt();
-                            switch (choice){
-                                case 1: broadcasts.get(choose).showInfo(); break;
-                                case 2: broadcasts.get(choose).showIncome();
+                            switch (choice) {
+                                case 1 -> broadcasts.get(choose).showInfo();
+                                case 2 -> broadcasts.get(choose).showIncome();
                             }
                             if (choice != 1 && choice != 2)
                                 break;
@@ -58,8 +67,8 @@ public class RadioStation {
                 }
             }
             else if(choose == 2){
-                for(int i = 0;i < broadcasters.size();i++){
-                    broadcasters.get(i).showInfo();
+                for (Broadcaster broadcaster : broadcasters) {
+                    broadcaster.showInfo();
                     System.out.println();
                 }
             }
@@ -84,7 +93,7 @@ public class RadioStation {
                     section = interviews.get(rand.nextInt(0, interviews.size()));
                 else
                     section = advertisingList.get(rand.nextInt(0, advertisingList.size()));
-                if(broadcasts.get(i).addSection(section) == "Broadcasting duration exceeded"){
+                if(broadcasts.get(i).addSection(section).equals("Broadcasting duration exceeded")){
 //якщо тривалість частин трансляції перевищує допустиму, то спроба доповнити цю трансляцію
 // більш короткими частинами(тобто без інтерв'ю)
                     while (true){
@@ -93,7 +102,7 @@ public class RadioStation {
                             section = songs.get(rand.nextInt(0, songs.size()));
                         else
                             section = advertisingList.get(rand.nextInt(0, advertisingList.size()));
-                        if(broadcasts.get(i).addSection(section) == "Broadcasting duration exceeded")
+                        if(broadcasts.get(i).addSection(section).equals("Broadcasting duration exceeded"))
                             break;
                     }
                     break;
@@ -105,22 +114,22 @@ public class RadioStation {
         DBHandler db = new DBHandler();
         ResultSet resultSet = null;
         for(int i = 0; i < 4;i++){//для проходження по всім 4 спискам
-            switch (i){
-                case 0: resultSet = db.getAllBroadcasters(); break;//в залежності від ітерації
-                case 1: resultSet = db.getAllSongs(); break;//змінююється метод отримання даних
-                case 2: resultSet = db.getAllInterviews();break;
-                case 3: resultSet = db.getAllAdvertising();
+            switch (i) {
+                case 0 -> resultSet = db.getAllBroadcasters();//в залежності від ітерації
+                case 1 -> resultSet = db.getAllSongs();//змінююється метод отримання даних
+                case 2 -> resultSet = db.getAllInterviews();
+                case 3 -> resultSet = db.getAllAdvertising();
             }
                 try {
                     while (resultSet.next()){
-                        switch (i){
-                            case 0: broadcasters.add(new WorkingBroadcaster(resultSet.getString(2),
-                                    resultSet.getString(3), resultSet.getInt(4))); break;
-                            case 1: songs.add(new Song(resultSet.getString(2),
-                                    resultSet.getString(3), resultSet.getInt(4))); break;
-                            case 2: interviews.add(new Interview(resultSet.getString(2),
-                                    resultSet.getInt(3))); break;
-                            case 3: advertisingList.add(new Advertising(resultSet.getString(2),
+                        switch (i) {
+                            case 0 -> broadcasters.add(new WorkingBroadcaster(resultSet.getString(2),
+                                    resultSet.getString(3), resultSet.getInt(4)));
+                            case 1 -> songs.add(new Song(resultSet.getString(2),
+                                    resultSet.getString(3), resultSet.getInt(4)));
+                            case 2 -> interviews.add(new Interview(resultSet.getString(2),
+                                    resultSet.getInt(3)));
+                            case 3 -> advertisingList.add(new Advertising(resultSet.getString(2),
                                     resultSet.getInt(3)));
                         }
                     }

@@ -1,3 +1,7 @@
+package broadcast.sections;
+
+import broadcast.sections.abstraction.BroadcastSection;
+
 public class Advertising extends BroadcastSection {
     private final String product;
 

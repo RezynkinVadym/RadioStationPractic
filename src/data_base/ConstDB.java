@@ -1,4 +1,4 @@
-package DataBase;
+package data_base;
 
 public class ConstDB {
     protected final String DB_HOST = "localhost";

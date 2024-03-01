@@ -1,5 +1,7 @@
-public class WorkingBroadcaster extends Broadcaster{
-    private int workExperience;//work experience in years
+package broadcast.broadcasters;
+
+public class WorkingBroadcaster extends Broadcaster {
+    private final int workExperience;//work experience in years
     public WorkingBroadcaster(String name, String resume, int workExperience){
         super(name, resume);
         this.workExperience = workExperience;

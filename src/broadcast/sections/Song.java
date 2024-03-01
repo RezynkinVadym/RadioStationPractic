@@ -1,4 +1,8 @@
-public class Song extends BroadcastSection{
+package broadcast.sections;
+
+import broadcast.sections.abstraction.BroadcastSection;
+
+public class Song extends BroadcastSection {
     private final String title;
     private final String performer;
 

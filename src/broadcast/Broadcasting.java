@@ -1,7 +1,15 @@
+package broadcast;
+
+import broadcast.broadcasters.Broadcaster;
+import broadcast.sections.Advertising;
+import broadcast.sections.Interview;
+import broadcast.sections.Song;
+import broadcast.sections.abstraction.BroadcastSection;
+
 import java.time.LocalDate;
 import java.util.*;
 
-public class Broadcasting {
+public class Broadcasting extends BroadcastingConst {
     private List<BroadcastSection> sections = new ArrayList<>();//список частин трансляції (пісні, реклами, інтерв'ю)
     private final LocalDate broadcastDate;
     private final int duration;//максимальна тривалість трансляції
@@ -9,11 +17,6 @@ public class Broadcasting {
     private double currentDuration = 0;//поточна тривалість трансляції, тобто сума тривалості всіх частин
     private double paidContentDuration = 0;//поточна тривалість платного контенту
     private int income = 0;//прибуток трансляції з платного контенту
-
-    private final String[] paidContentTypes = {"Advertising", "Interview"};//типи платного контенту
-    private final int SECOND_ADVERTISING_COST = 5;//константи цін за секунду реклами та хвилину інтерв'ю
-    private final int MINUTE_INTERVIEW_COST = 30;
-    private final double MAX_PAID_CONTENT_DURATION_COEF = 0.5;//максимально допустима доля платного контенту
 
     public Broadcasting(int duration, Broadcaster broadcaster, LocalDate broadcastDate){
         this.broadcastDate = broadcastDate;
@@ -29,7 +32,7 @@ public class Broadcasting {
 
     public String addSection(BroadcastSection section){
         double sectionDuration = section.getDuration();
-        if(section.getSectionType() == "Advertising")
+        if(section.getSectionType().equals("Advertising"))
             sectionDuration /= 60;//приведення секунд реклами до хвилин
 
         if(checkDuration(sectionDuration)){
@@ -66,20 +69,21 @@ public class Broadcasting {
         Advertising advertising;
         Interview interview;
         String sectionInfo = "";
-        for(int i = 0;i < sections.size();i++){
-            BroadcastSection section = sections.get(i);
+        for (BroadcastSection section : sections) {
             int sectionDuration = section.getDuration();
-            if(section.getSectionType() == "Song") {
-                song = (Song) section;
-                sectionInfo = "Song " + song.getTitle() + " by " + song.getPerformer() + ", " + sectionDuration + " minute(s)";
-            }
-            else if(section.getSectionType() == "Advertising"){
-                advertising = (Advertising) section;
-                sectionInfo = advertising.getProduct() + " advertisement" + ", " + sectionDuration + " second(s)";
-            }
-            else if(section.getSectionType() == "Interview"){
-                interview = (Interview) section;
-                sectionInfo = "Interview, respondent " + interview.getRespondent() + ", " + sectionDuration + " minute(s)";
+            switch (section.getSectionType()) {
+                case "Song" -> {
+                    song = (Song) section;
+                    sectionInfo = "Song " + song.getTitle() + " by " + song.getPerformer() + ", " + sectionDuration + " minute(s)";
+                }
+                case "Advertising" -> {
+                    advertising = (Advertising) section;
+                    sectionInfo = advertising.getProduct() + " advertisement" + ", " + sectionDuration + " second(s)";
+                }
+                case "Interview" -> {
+                    interview = (Interview) section;
+                    sectionInfo = "Interview, respondent " + interview.getRespondent() + ", " + sectionDuration + " minute(s)";
+                }
             }
             System.out.println(sectionInfo);
         }
@@ -89,7 +93,7 @@ public class Broadcasting {
         return duration > sectionDuration + currentDuration;//час трансляції якщо додати нову частину
     }
     private boolean isPaidContent(BroadcastSection section){//перевірка чи є ця частина платним контентом
-        return Arrays.asList(paidContentTypes).contains(section.getSectionType());
+        return Arrays.asList(PAID_CONTENT_TYPES).contains(section.getSectionType());
     }
     private boolean checkPaidContentDuration(double sectionDuration){//чи не перевищує частина реклами допустимий коефіцієнт
         return ((paidContentDuration + sectionDuration) / duration) <= MAX_PAID_CONTENT_DURATION_COEF;
@@ -97,9 +101,9 @@ public class Broadcasting {
     private int sectionIncome(BroadcastSection section){//розрахунок доходу від частини трансляції
         String sectionType = section.getSectionType();//залежно від її типу та тривалості
         int sectionDuration = section.getDuration();
-        if(sectionType == "Advertising")
+        if(sectionType.equals("Advertising"))
             return sectionDuration * SECOND_ADVERTISING_COST;
-        else if(sectionType == "Interview")
+        else if(sectionType.equals("Interview"))
             return sectionDuration * MINUTE_INTERVIEW_COST;
         return 0;
     }

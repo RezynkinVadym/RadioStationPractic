@@ -1,10 +1,14 @@
+package broadcast.broadcasters;
+
+import broadcast.Broadcasting;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Broadcaster {
     protected boolean guest = true;
     private final String name;
-    private List<Broadcasting> broadcastings = new ArrayList<Broadcasting>();
+    private List<Broadcasting> broadcastings = new ArrayList<>();
     private final String resume;
     public Broadcaster(String name, String resume){
         this.name = name;
@@ -28,8 +32,8 @@ public class Broadcaster {
             System.out.println(", conducted following broadcasts:");
         else
             System.out.println();
-        for(int i = 0;i < broadcastings.size();i++){
-            System.out.println("From " + broadcastings.get(i).getDate() + ", duration " + broadcastings.get(i).getDuration());
+        for (Broadcasting broadcasting : broadcastings) {
+            System.out.println("From " + broadcasting.getDate() + ", duration " + broadcasting.getDuration());
         }
     }
 }

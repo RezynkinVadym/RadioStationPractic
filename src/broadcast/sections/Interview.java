@@ -1,4 +1,8 @@
-public class Interview extends BroadcastSection{
+package broadcast.sections;
+
+import broadcast.sections.abstraction.BroadcastSection;
+
+public class Interview extends BroadcastSection {
     private final String respondent;
 
     public Interview(String respondent, int durationMinutes) {

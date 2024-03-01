@@ -1,9 +1,9 @@
-package DataBase;
+package data_base;
 import java.sql.*;
 
 public class DBHandler extends ConstDB {//клас для взаємодії з бд
     Connection connection;
-    private String selectAll = "SELECT * FROM ";
+    private final String selectAll = "SELECT * FROM ";
     public Connection getDBConnection()
             throws ClassNotFoundException, SQLException{
         String connectionString = "jdbc:mysql://" + DB_HOST + ":" + DB_PORT + "/" + DB_NAME;
@@ -14,21 +14,22 @@ public class DBHandler extends ConstDB {//клас для взаємодії з 
 
     public ResultSet getAllBroadcasters(){
         String query = selectAll + BROADCASTERS_TABLE;
-        return executeSelect(null, query);
+        return executeSelect(query);
     }
     public ResultSet getAllSongs(){
         String query = selectAll + SONGS_TABLE;
-        return executeSelect(null, query);
+        return executeSelect(query);
     }
     public ResultSet getAllInterviews(){
         String query = selectAll + INTERVIEW_TABLE;
-        return executeSelect(null, query);
+        return executeSelect(query);
     }
     public ResultSet getAllAdvertising(){
         String query = selectAll + ADVERTISING_TABLE;
-        return executeSelect(null, query);
+        return executeSelect(query);
     }
-    private ResultSet executeSelect(ResultSet resultSet, String query){
+    private ResultSet executeSelect(String query){
+        ResultSet resultSet = null;
         try {
             PreparedStatement preparedStatement = getDBConnection().prepareStatement(query);
             resultSet = preparedStatement.executeQuery();

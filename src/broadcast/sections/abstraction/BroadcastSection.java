@@ -1,3 +1,5 @@
+package broadcast.sections.abstraction;
+
 public abstract class BroadcastSection {
     private final int duration;
     private final String sectionType;
